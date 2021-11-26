@@ -1,7 +1,7 @@
 import { Collapse } from 'antd'
 import React from 'react'
 
-import PageHeader, { PageHeaderProps } from '../PageHeader'
+import PageHeader, { PageHeaderProps } from 'components/PageHeader'
 
 import { Wrapper, Content } from './styles'
 

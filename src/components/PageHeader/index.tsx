@@ -1,5 +1,7 @@
+import { Button, Dropdown, Space, Typography } from 'antd'
 import { ArrowLeftOutlined, MenuOutlined, SaveOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Input, Space, Typography } from 'antd'
+
+import InputSearchText from 'components/InputSearchText'
 
 import { Wrapper, Title } from './styles'
 
@@ -15,13 +17,11 @@ export default function PageHeader({ acoesMenu }: PageHeaderProps) {
       <Space align="center">
         <Button type="text" size="large" icon={<ArrowLeftOutlined />} />
         <Space align="baseline">
-          <Title level={2} >Home</Title>
+          <Title level={3}>Home</Title>
           <Typography.Text type="secondary"  >descrição</Typography.Text>
         </Space>
       </Space>
-      <Space>
-        <Input.Search size="middle" enterButton placeholder="Buscar" />
-      </Space>
+      <InputSearchText size="middle" enterButton placeholder="Buscar" />
       <Space>
         <Button size="middle" type="primary" icon={<SaveOutlined />} >Salvar</Button>
         {acoesMenu && (

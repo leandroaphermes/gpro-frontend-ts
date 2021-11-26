@@ -1,6 +1,6 @@
 import { Card, Menu } from 'antd'
 
-import BaseTemplate from '../../components/BaseTemplate'
+import BaseTemplate from '../../components/TemplatePage'
 
 export default function Home() {
 
