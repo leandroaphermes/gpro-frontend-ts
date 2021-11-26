@@ -1,13 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { ConfigProvider } from 'antd'
+import App from './App'
+
+import 'antd/dist/antd.css'
+import './styles.css'
+
+import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ConfigProvider componentSize="small" >
     <App />
-  </React.StrictMode>,
+  </ConfigProvider>,
   document.getElementById('root')
 );
 
