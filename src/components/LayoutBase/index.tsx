@@ -1,22 +1,25 @@
 import { Layout } from 'antd'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 
-import Home from 'pages/home'
-import Aside from './Aside'
+import LayoutMenuAside from 'components/LayoutMenuAside'
 
 const widthMenu = 240
 
-export default function LayoutBase() {
+type LayoutBaseProps = {
+  children: React.ReactElement
+}
+
+export default function LayoutBase({ children }: LayoutBaseProps) {
 
   const [collapsed, setCollapsed] = useState(false)
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Aside collapsed={collapsed}  onToogleCollapsed={setCollapsed} widthMenu={widthMenu} />
+      <LayoutMenuAside collapsed={collapsed}  onToogleCollapsed={setCollapsed} widthMenu={widthMenu} />
       <Layout style={{ marginLeft: !collapsed ? widthMenu : 80, height: "100%" }}>
         <Layout.Content>
-          <Home />
+          {children}
         </Layout.Content>
       </Layout>
     </Layout>

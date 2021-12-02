@@ -1,12 +1,15 @@
 import { ConfigProvider } from 'antd';
 import LaoutBaseTemplate from 'components/LayoutBase'
+import Routers from 'routers';
 
 function App() {
 
 
   return (
     <ConfigProvider componentSize="small" >
-      <LaoutBaseTemplate />
+      <LaoutBaseTemplate>
+        <Routers />
+      </LaoutBaseTemplate>
     </ConfigProvider>
   );
 }

@@ -1,12 +1,10 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
-import { ConfigProvider } from 'antd'
 import App from './App'
 
 import 'antd/dist/antd.css'
 import './styles.css'
 
-import reportWebVitals from './reportWebVitals'
+// import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
   <App />,
