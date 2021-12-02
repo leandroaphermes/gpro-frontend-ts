@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   height: 100vh;
 `;
 
-export const Content = styled.div`
+export const ContentPage = styled.div`
   padding: 15px;
   overflow: auto;
 `;

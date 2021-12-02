@@ -1,40 +1,94 @@
-import { Button, Dropdown, Space, Typography } from 'antd'
-import { ArrowLeftOutlined, MenuOutlined, SaveOutlined } from '@ant-design/icons'
+import { Button, Dropdown, Input, Space, Typography } from "antd";
+import {
+  ArrowLeftOutlined,
+  MenuOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 
-import InputSearchText from 'components/InputSearchText'
+import InputSearchText, { onSearchProp } from "components/InputSearchText";
 
-import { Wrapper, Title } from './styles'
+import { Wrapper, Title } from "./styles";
+import { useEffect, useRef } from "react";
 
 export type PageHeaderProps = {
-  title?: React.ReactNode,
-  subTitle?: React.ReactNode,
-  acoesMenu?: JSX.Element
-}
+  title: React.ReactNode;
+  subTitle?: React.ReactNode;
+  acoesMenu?: React.ReactElement;
+  acoesMenuText?: React.ReactNode;
+  loading?: boolean;
+  onSave?: () => void;
+  showSearch?: boolean;
+  showSave?: boolean;
+  showBackHistory?: boolean;
+};
 
-export default function PageHeader({ acoesMenu }: PageHeaderProps) {
+export default function PageHeader({
+  title,
+  subTitle,
+  acoesMenu,
+  acoesMenuText = "Ações",
+  onSave,
+  showSearch = true,
+  showSave,
+  showBackHistory = true,
+  loading,
+}: PageHeaderProps) {
+  const refSearch = useRef<Input>(null);
+
+  const handleSearch: onSearchProp = function (value, event) {
+    console.log(value, event);
+  };
+
+  useEffect(() => {
+    refSearch.current?.focus();
+  }, []);
+
   return (
     <Wrapper>
       <Space align="center">
-        <Button type="text" size="large" icon={<ArrowLeftOutlined />} />
+        {showBackHistory && (
+          <Button type="text" size="large" icon={<ArrowLeftOutlined />} />
+        )}
         <Space align="baseline">
-          <Title level={3}>Home</Title>
-          <Typography.Text type="secondary"  >descrição</Typography.Text>
+          <Title level={3}>{title}</Title>
+          <Typography.Text type="secondary">{subTitle}</Typography.Text>
         </Space>
       </Space>
-      <InputSearchText size="middle" enterButton placeholder="Buscar" />
+      {showSearch && (
+        <InputSearchText
+          size="middle"
+          enterButton
+          placeholder="Buscar"
+          loading={loading}
+          onSearch={handleSearch}
+          ref={refSearch}
+        />
+      )}
       <Space>
-        <Button size="middle" type="primary" icon={<SaveOutlined />} >Salvar</Button>
+        {showSave && (
+          <Button
+            size="middle"
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={onSave}
+            loading={loading}
+          >
+            Salvar
+          </Button>
+        )}
         {acoesMenu && (
-          <Dropdown overlay={acoesMenu} trigger={['click']}>
-            <Button 
-              size="middle" 
-              type="default" 
-              icon={<MenuOutlined />} 
-              style={{ background: "#e68f2c", color: "#FFF" }} 
-            >Ações</Button>
+          <Dropdown overlay={acoesMenu} trigger={["click"]}>
+            <Button
+              size="middle"
+              type="ghost"
+              icon={<MenuOutlined />}
+              aria-label="Mais Ações"
+            >
+              {acoesMenuText}
+            </Button>
           </Dropdown>
         )}
       </Space>
     </Wrapper>
-  )
+  );
 }
