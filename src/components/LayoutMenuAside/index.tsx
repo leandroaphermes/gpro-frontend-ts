@@ -46,14 +46,14 @@ export default function Aside({
   return (
     <LayoutSider
       collapsible
-      breakpoint="lg"
+      breakpoint="xl"
       collapsed={collapsed}
       onCollapse={onToogleCollapsed}
       onBreakpoint={onToogleCollapsed}
       width={widthMenu}
     >
       <WrapperBrand>
-        <BrandTitle level={3}>{process.env.REACT_APP_NAME}</BrandTitle>
+        <BrandTitle level={4}>{process.env.REACT_APP_NAME}</BrandTitle>
         {!collapsed && (
           <BrandSubTitle>{process.env.REACT_APP_SUBNAME}</BrandSubTitle>
         )}
