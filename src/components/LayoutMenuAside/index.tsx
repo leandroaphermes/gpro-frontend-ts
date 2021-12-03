@@ -1,11 +1,11 @@
 import { Menu, Tag } from "antd";
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
+  HomeOutlined,
+  LogoutOutlined,
+  PhoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import _ from "lodash";
 
 import {
@@ -37,6 +37,37 @@ const { empresa, usuario } = {
     nome: "Leandro",
   },
 };
+
+const routerList = [
+  {
+    key: "home",
+    href: "/",
+    title: "Inicio",
+    icon: <HomeOutlined />,
+    permissions: [],
+  },
+  {
+    key: "clientes",
+    href: "/clientes",
+    title: "Clientes",
+    icon: <UserOutlined />,
+    permissions: [],
+  },
+  {
+    key: "ligacoes",
+    href: "/ligacoes",
+    title: "Ligações",
+    icon: <PhoneOutlined />,
+    permissions: [],
+  },
+  {
+    key: "logout",
+    href: "/logout",
+    title: "Sair",
+    icon: <LogoutOutlined />,
+    permissions: [],
+  },
+];
 
 export default function Aside({
   collapsed,
@@ -84,25 +115,13 @@ export default function Aside({
       </WrapperBrand>
 
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-        <Menu.Item key="1" icon={<PieChartOutlined />}>
-          Option 1
-        </Menu.Item>
-
-        <Menu.Item key="2" icon={<DesktopOutlined />}>
-          Option 2
-        </Menu.Item>
-        <Menu.SubMenu key="sub1" icon={<UserOutlined />} title="User">
-          <Menu.Item key="3">Tom</Menu.Item>
-          <Menu.Item key="4">Bill</Menu.Item>
-          <Menu.Item key="5">Alex</Menu.Item>
-        </Menu.SubMenu>
-        <Menu.SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-          <Menu.Item key="6">Team 1</Menu.Item>
-          <Menu.Item key="8">Team 2</Menu.Item>
-        </Menu.SubMenu>
-        <Menu.Item key="9" icon={<FileOutlined />}>
-          Files
-        </Menu.Item>
+        {routerList.map((item) => {
+          return (
+            <Menu.Item key={item.key} icon={item.icon}>
+              <Link to={item.href}>{item.title}</Link>
+            </Menu.Item>
+          );
+        })}
       </Menu>
     </LayoutSider>
   );
