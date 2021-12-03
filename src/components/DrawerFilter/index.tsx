@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { Button, Drawer, Space, Form, Row } from "antd";
 
-export type DrawerFilterProps = {
+export type DrawerFilterProps<T> = {
   visible: boolean;
   children: React.ReactNode;
   title?: React.ReactNode;
   onClose: () => void;
   onOk: (values: any) => Promise<void>;
+  initialValues?: T;
 };
 
-export default function DrawerFilter({
+export default function DrawerFilter<T>({
   children,
   visible,
   title = "Filtros Avançado",
   onClose,
   onOk,
-}: DrawerFilterProps) {
+  initialValues,
+}: DrawerFilterProps<T>) {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
@@ -44,7 +46,7 @@ export default function DrawerFilter({
         </Space>
       }
     >
-      <Form layout="vertical" form={form}>
+      <Form layout="vertical" form={form} initialValues={initialValues}>
         <Row gutter={16}>
           {typeof children === "function" ? children(form) : children}
         </Row>

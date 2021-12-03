@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Dropdown, Grid, Input, Space, Typography } from "antd";
 import {
   ArrowLeftOutlined,
@@ -27,10 +27,6 @@ export type PageHeaderProps = {
   fieldsfilterAvancado?: React.ReactNode;
 };
 
-type SearchUrlProps = {
-  s?: string;
-};
-
 export default function PageHeader({
   title,
   subTitle,
@@ -47,10 +43,14 @@ export default function PageHeader({
   const refSearch = useRef<Input>(null);
   const responsive = Grid.useBreakpoint();
 
-  const [searchParams, setSearchParams] = useQuerieString<SearchUrlProps>();
+  const [searchParams, setSearchParams] = useQuerieString<any>();
 
   const [controleModalFiltroAvancado, setControleModalFiltroAvancado] =
     useState(false);
+
+  const initialFilterValues = useMemo(() => {
+    return searchParams;
+  }, [searchParams]);
 
   async function handleSearchAvancado(value: any) {
     /* console.log(value, event); */
@@ -90,7 +90,7 @@ export default function PageHeader({
             onSearch={handleSearch}
             ref={refSearch}
             style={{ width: !responsive.md ? "150px" : "300px" }}
-            defaultValue={searchParams.s || ""}
+            defaultValue={searchParams?.s || ""}
           />
           {showFilter && fieldsfilterAvancado && (
             <Button
@@ -132,6 +132,7 @@ export default function PageHeader({
         visible={controleModalFiltroAvancado}
         onClose={() => setControleModalFiltroAvancado(false)}
         onOk={handleSearchAvancado}
+        initialValues={initialFilterValues}
       >
         {fieldsfilterAvancado}
       </DrawerFilter>
