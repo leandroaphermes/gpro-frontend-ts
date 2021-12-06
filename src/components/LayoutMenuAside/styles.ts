@@ -3,16 +3,14 @@ import styled from "styled-components";
 
 
 export const LayoutSider = styled(Layout.Sider)`
-  overflow: auto;
   height: 100vh;
-  position: fixed;
-  left: 0;
+  position: relative;
 `
 
 export const WrapperBrand = styled.div`
   text-align: center;
   color: #FFF;
-  padding: 15px;
+  padding: 10px;
 `
 
 export const BrandTitle = styled(Typography.Title)`

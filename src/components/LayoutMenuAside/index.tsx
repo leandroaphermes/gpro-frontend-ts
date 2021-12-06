@@ -1,11 +1,11 @@
-import { Menu, Tag } from "antd";
+import { Grid, Menu, Tag } from "antd";
+import { Link, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
   LogoutOutlined,
   PhoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import _ from "lodash";
 
 import {
@@ -40,28 +40,24 @@ const { empresa, usuario } = {
 
 const routerList = [
   {
-    key: "home",
     href: "/",
     title: "Inicio",
     icon: <HomeOutlined />,
     permissions: [],
   },
   {
-    key: "clientes",
     href: "/clientes",
     title: "Clientes",
     icon: <UserOutlined />,
     permissions: [],
   },
   {
-    key: "ligacoes",
     href: "/ligacoes",
     title: "Ligações",
     icon: <PhoneOutlined />,
     permissions: [],
   },
   {
-    key: "logout",
     href: "/logout",
     title: "Sair",
     icon: <LogoutOutlined />,
@@ -74,6 +70,14 @@ export default function Aside({
   onToogleCollapsed,
   widthMenu,
 }: AsideProps) {
+  const responsive = Grid.useBreakpoint();
+
+  const location = useLocation();
+
+  const defaultSelected = routerList.find(
+    (row) => location.pathname === row.href
+  );
+
   return (
     <LayoutSider
       collapsible
@@ -81,6 +85,7 @@ export default function Aside({
       collapsed={collapsed}
       onCollapse={onToogleCollapsed}
       onBreakpoint={onToogleCollapsed}
+      collapsedWidth={responsive.md ? 80 : 0}
       width={widthMenu}
     >
       <WrapperBrand>
@@ -114,10 +119,14 @@ export default function Aside({
         )}
       </WrapperBrand>
 
-      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+      <Menu
+        theme="dark"
+        defaultSelectedKeys={[defaultSelected?.href || ""]}
+        mode="inline"
+      >
         {routerList.map((item) => {
           return (
-            <Menu.Item key={item.key} icon={item.icon}>
+            <Menu.Item key={item.href} icon={item.icon}>
               <Link to={item.href}>{item.title}</Link>
             </Menu.Item>
           );

@@ -13,14 +13,16 @@ export default function LayoutBase({ children }: LayoutBaseProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh" }}>
       <LayoutMenuAside
         collapsed={collapsed}
         onToogleCollapsed={setCollapsed}
         widthMenu={widthMenu}
       />
       <Layout
-        style={{ marginLeft: !collapsed ? widthMenu : 80, height: "100%" }}
+        style={{
+          height: "100vh",
+        }}
       >
         <Layout.Content>{children}</Layout.Content>
       </Layout>

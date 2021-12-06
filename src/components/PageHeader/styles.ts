@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   background-color: #fff;
   box-shadow: 0 4px 6px -6px #222;
-  z-index: 50;
+  z-index: 10;
   display: flex;
   gap: 10px;
   justify-content: space-between;

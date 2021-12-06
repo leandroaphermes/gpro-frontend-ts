@@ -2,9 +2,10 @@ import React from "react";
 
 import PageHeader, { PageHeaderProps } from "components/PageHeader";
 
-import { Wrapper, ContentPage } from "./styles";
+import { Wrapper, ContentPage, EnumContainerProp } from "./styles";
 
 export type BaseTemplateProps = {
+  container?: EnumContainerProp;
   children: React.ReactNode;
   pageHeader: PageHeaderProps;
 };
@@ -12,11 +13,12 @@ export type BaseTemplateProps = {
 export default function BaseTemplate({
   children,
   pageHeader: headerProps,
+  container,
 }: BaseTemplateProps) {
   return (
     <Wrapper>
       <PageHeader {...headerProps} />
-      <ContentPage>{children}</ContentPage>
+      <ContentPage container={container}>{children}</ContentPage>
     </Wrapper>
   );
 }

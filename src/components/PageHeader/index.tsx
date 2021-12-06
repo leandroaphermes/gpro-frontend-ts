@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Dropdown, Grid, Input, Space, Typography } from "antd";
 import {
   ArrowLeftOutlined,
@@ -24,7 +24,8 @@ export type PageHeaderProps = {
   showSave?: boolean;
   showBackHistory?: boolean;
   showFilter?: boolean;
-  fieldsfilterAvancado?: React.ReactNode;
+  fieldsFilterAvancado?: React.ReactNode;
+  initialFilterAvancado?: object;
 };
 
 export default function PageHeader({
@@ -38,7 +39,8 @@ export default function PageHeader({
   showBackHistory = true,
   showFilter = true,
   loading,
-  fieldsfilterAvancado,
+  fieldsFilterAvancado,
+  initialFilterAvancado,
 }: PageHeaderProps) {
   const refSearch = useRef<Input>(null);
   const responsive = Grid.useBreakpoint();
@@ -47,10 +49,6 @@ export default function PageHeader({
 
   const [controleModalFiltroAvancado, setControleModalFiltroAvancado] =
     useState(false);
-
-  const initialFilterValues = useMemo(() => {
-    return searchParams;
-  }, [searchParams]);
 
   async function handleSearchAvancado(value: any) {
     /* console.log(value, event); */
@@ -62,8 +60,6 @@ export default function PageHeader({
     /* console.log(value, event); */
     setSearchParams({ ...searchParams, s: value });
   };
-
-  console.log(searchParams);
 
   useEffect(() => {
     refSearch.current?.focus();
@@ -92,7 +88,7 @@ export default function PageHeader({
             style={{ width: !responsive.md ? "150px" : "300px" }}
             defaultValue={searchParams?.s || ""}
           />
-          {showFilter && fieldsfilterAvancado && (
+          {showFilter && fieldsFilterAvancado && (
             <Button
               type="text"
               size="middle"
@@ -132,9 +128,9 @@ export default function PageHeader({
         visible={controleModalFiltroAvancado}
         onClose={() => setControleModalFiltroAvancado(false)}
         onOk={handleSearchAvancado}
-        initialValues={initialFilterValues}
+        initialValues={initialFilterAvancado}
       >
-        {fieldsfilterAvancado}
+        {fieldsFilterAvancado}
       </DrawerFilter>
     </Wrapper>
   );
