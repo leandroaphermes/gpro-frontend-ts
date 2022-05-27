@@ -1,10 +1,24 @@
-import { Card, Col, Input, Form, FormInstance } from "antd";
+import {
+  Card,
+  Col,
+  Input,
+  Form,
+  FormInstance,
+  Menu,
+  Table,
+  TableColumnsType,
+} from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 
 import BaseTemplate from "components/TemplatePage";
+import { mockData } from "./mock";
+import { useNavigate } from "react-router-dom";
 
 export default function Clientes() {
   const initialFilterAvancado = useMemo(() => ({}), []);
+
+  const navigate = useNavigate();
 
   const fieldsForm = (form: FormInstance) => {
     return (
@@ -23,21 +37,61 @@ export default function Clientes() {
     );
   };
 
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: "info",
+          label: "Informações",
+          icon: <InfoCircleOutlined />,
+        },
+      ]}
+    />
+  );
+
+  const colunas: TableColumnsType<typeof mockData[0]> = [
+    {
+      title: "Nome",
+      dataIndex: "name",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
+    {
+      title: "Mail",
+      dataIndex: "email",
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      align: "right",
+    },
+  ];
+
   return (
     <BaseTemplate
       container="central"
-      pageHeader={{
+      headerProps={{
         title: "Clientes",
         showFilter: true,
         fieldsFilterAvancado: fieldsForm,
         initialFilterAvancado,
+        onSave: console.log,
+        showSave: true,
+        saveMode: "add",
+        acoesMenu: menu,
       }}
     >
       <Card>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas officiis
-        repellendus architecto dignissimos explicabo animi sint perferendis
-        soluta vitae ratione iusto officia beatae iure quasi incidunt fugit
-        blanditiis, id exercitationem?
+        <Table
+          dataSource={mockData}
+          columns={colunas}
+          rowKey="_id"
+          onRow={(rowData) => ({
+            onClick: (event) => navigate(`/clientes/${rowData._id}`),
+          })}
+        />
       </Card>
     </BaseTemplate>
   );

@@ -1,30 +1,35 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Dropdown, Grid, Input, Space, Typography } from "antd";
+import { Button, Dropdown, Grid, Space, Typography } from "antd";
 import {
   ArrowLeftOutlined,
   FilterOutlined,
   MenuOutlined,
+  PlusOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
 
-import InputSearchText, { onSearchProp } from "components/InputSearchText";
-
-import { Wrapper, Title } from "./styles";
-import DrawerFilter from "components/DrawerFilter";
 import useQuerieString from "hooks/useQuerieString";
+
+import InputSearchText, { onSearchProp } from "components/InputSearchText";
+import DrawerFilter, { DrawerFilteRenderProp } from "components/DrawerFilter";
+
+import * as S from "./styles";
+import { useNavigate } from "react-router-dom";
 
 export type PageHeaderProps = {
   title: React.ReactNode;
   subTitle?: React.ReactNode;
-  acoesMenu?: React.ReactElement;
+  acoesMenu?: JSX.Element;
   acoesMenuText?: React.ReactNode;
   loading?: boolean;
   onSave?: () => void;
+  saveText?: string;
+  saveMode?: "save" | "add";
   showSearch?: boolean;
   showSave?: boolean;
   showBackHistory?: boolean;
   showFilter?: boolean;
-  fieldsFilterAvancado?: React.ReactNode;
+  fieldsFilterAvancado?: DrawerFilteRenderProp;
   initialFilterAvancado?: object;
 };
 
@@ -34,6 +39,8 @@ export default function PageHeader({
   acoesMenu,
   acoesMenuText = "Ações",
   onSave,
+  saveText,
+  saveMode = "save",
   showSearch = true,
   showSave,
   showBackHistory = true,
@@ -42,8 +49,9 @@ export default function PageHeader({
   fieldsFilterAvancado,
   initialFilterAvancado,
 }: PageHeaderProps) {
-  const refSearch = useRef<Input>(null);
+  const refSearch = useRef<any>(null);
   const responsive = Grid.useBreakpoint();
+  const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useQuerieString<any>();
 
@@ -66,13 +74,18 @@ export default function PageHeader({
   }, []);
 
   return (
-    <Wrapper>
+    <S.Wrapper>
       <Space align="center">
         {showBackHistory && (
-          <Button type="text" size="large" icon={<ArrowLeftOutlined />} />
+          <Button
+            type="text"
+            size="large"
+            icon={<ArrowLeftOutlined />}
+            onClick={() => navigate(-1)}
+          />
         )}
         <Space align="baseline">
-          <Title level={3}>{title}</Title>
+          <S.Title level={3}>{title}</S.Title>
           <Typography.Text type="secondary">{subTitle}</Typography.Text>
         </Space>
       </Space>
@@ -104,15 +117,15 @@ export default function PageHeader({
           <Button
             size="middle"
             type="primary"
-            icon={<SaveOutlined />}
+            icon={saveMode === "save" ? <SaveOutlined /> : <PlusOutlined />}
             onClick={onSave}
             loading={loading}
           >
-            Salvar
+            {saveText || saveMode === "save" ? "Salvar" : "Adicionar"}
           </Button>
         )}
         {acoesMenu && (
-          <Dropdown overlay={acoesMenu} trigger={["click"]}>
+          <Dropdown arrow overlay={acoesMenu} trigger={["click"]}>
             <Button
               size="middle"
               type="ghost"
@@ -129,9 +142,8 @@ export default function PageHeader({
         onClose={() => setControleModalFiltroAvancado(false)}
         onOk={handleSearchAvancado}
         initialValues={initialFilterAvancado}
-      >
-        {fieldsFilterAvancado}
-      </DrawerFilter>
-    </Wrapper>
+        children={fieldsFilterAvancado}
+      />
+    </S.Wrapper>
   );
 }

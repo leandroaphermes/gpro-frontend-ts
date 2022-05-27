@@ -1,5 +1,5 @@
 import { Grid, Menu, Tag } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, matchPath, resolvePath, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
   LogoutOutlined,
@@ -19,6 +19,7 @@ import {
   TextVersao,
   WrapperBrand,
 } from "./styles";
+import { useEffect, useMemo, useState } from "react";
 
 export type AsideProps = {
   collapsed: boolean;
@@ -38,28 +39,35 @@ const { empresa, usuario } = {
   },
 };
 
-const routerList = [
+export type RouteListProp = {
+  href: string;
+  permissions: [];
+  label: string | React.ReactNode;
+  icon?: React.ReactNode;
+};
+
+const routerList: RouteListProp[] = [
   {
     href: "/",
-    title: "Inicio",
+    label: "Inicio",
     icon: <HomeOutlined />,
     permissions: [],
   },
   {
     href: "/clientes",
-    title: "Clientes",
+    label: "Clientes",
     icon: <UserOutlined />,
     permissions: [],
   },
   {
     href: "/ligacoes",
-    title: "Ligações",
+    label: "Ligações",
     icon: <PhoneOutlined />,
     permissions: [],
   },
   {
     href: "/logout",
-    title: "Sair",
+    label: "Sair",
     icon: <LogoutOutlined />,
     permissions: [],
   },
@@ -70,13 +78,25 @@ export default function Aside({
   onToogleCollapsed,
   widthMenu,
 }: AsideProps) {
+  const [selectKeys, setSelectKeys] = useState<string[]>([]);
   const responsive = Grid.useBreakpoint();
 
   const location = useLocation();
 
-  const defaultSelected = routerList.find(
-    (row) => location.pathname === row.href
+  const defaultSelected = useMemo(
+    () =>
+      routerList
+        .map((item) => {
+          const match = matchPath(item.href, location.pathname);
+          return { href: item.href, status: !!match };
+        })
+        .find((row) => row.status),
+    [location.pathname, routerList]
   );
+
+  useEffect(() => {
+    setSelectKeys([defaultSelected?.href || "/"]);
+  }, [defaultSelected]);
 
   return (
     <LayoutSider
@@ -121,17 +141,14 @@ export default function Aside({
 
       <Menu
         theme="dark"
-        defaultSelectedKeys={[defaultSelected?.href || ""]}
+        selectedKeys={selectKeys}
         mode="inline"
-      >
-        {routerList.map((item) => {
-          return (
-            <Menu.Item key={item.href} icon={item.icon}>
-              <Link to={item.href}>{item.title}</Link>
-            </Menu.Item>
-          );
-        })}
-      </Menu>
+        items={routerList.map((item) => ({
+          ...item,
+          key: item.href,
+          label: <Link to={item.href}>{item.label}</Link>,
+        }))}
+      />
     </LayoutSider>
   );
 }

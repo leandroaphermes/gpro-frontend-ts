@@ -7,12 +7,12 @@ import { Wrapper, ContentPage, EnumContainerProp } from "./styles";
 export type BaseTemplateProps = {
   container?: EnumContainerProp;
   children: React.ReactNode;
-  pageHeader: PageHeaderProps;
+  headerProps: PageHeaderProps;
 };
 
 export default function BaseTemplate({
   children,
-  pageHeader: headerProps,
+  headerProps,
   container,
 }: BaseTemplateProps) {
   return (

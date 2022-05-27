@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Drawer, Space, Form, Row } from "antd";
+import { Button, Drawer, Space, Form, Row, FormInstance } from "antd";
+
+export type DrawerFilteRenderProp = (form: FormInstance) => JSX.Element;
 
 export type DrawerFilterProps<T> = {
   visible: boolean;
-  children: React.ReactNode;
+  children?: DrawerFilteRenderProp;
   title?: React.ReactNode;
   onClose: () => void;
   onOk: (values: any) => Promise<void>;
@@ -47,9 +49,7 @@ export default function DrawerFilter<T>({
       }
     >
       <Form layout="vertical" form={form} initialValues={initialValues}>
-        <Row gutter={16}>
-          {typeof children === "function" ? children(form) : children}
-        </Row>
+        <Row gutter={[8, 8]}>{children && children(form)}</Row>
       </Form>
     </Drawer>
   );

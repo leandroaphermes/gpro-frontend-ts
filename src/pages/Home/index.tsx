@@ -5,7 +5,7 @@ import BaseTemplate from "components/TemplatePage";
 export default function Home() {
   return (
     <BaseTemplate
-      pageHeader={{
+      headerProps={{
         title: "Home",
         showSearch: false,
       }}

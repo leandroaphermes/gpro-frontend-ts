@@ -1,15 +1,12 @@
 import { Layout } from "antd";
 import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 
 import LayoutMenuAside from "components/LayoutMenuAside";
 
 const widthMenu = 240;
 
-type LayoutBaseProps = {
-  children: React.ReactElement;
-};
-
-export default function LayoutBase({ children }: LayoutBaseProps) {
+export default function LayoutBase() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -24,7 +21,9 @@ export default function LayoutBase({ children }: LayoutBaseProps) {
           height: "100vh",
         }}
       >
-        <Layout.Content>{children}</Layout.Content>
+        <Layout.Content>
+          <Outlet />
+        </Layout.Content>
       </Layout>
     </Layout>
   );

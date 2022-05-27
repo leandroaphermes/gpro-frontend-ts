@@ -16,3 +16,9 @@ html {
 .ant-card {
   margin-bottom: 15px;
 }
+.ant-row.ant-form-item {
+  margin-bottom: 0px;
+}
+.ant-col.ant-form-item-label {
+  padding-bottom: 0px;
+}
