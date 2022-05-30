@@ -5,6 +5,7 @@ import antdPtBR from "antd/lib/locale/pt_BR";
 import "moment/locale/pt-br";
 
 import "./App.css";
+import { BrowserRouter } from "react-router-dom";
 
 message.config({
   duration: 3,
@@ -13,7 +14,9 @@ message.config({
 function App() {
   return (
     <ConfigProvider componentSize="small" locale={antdPtBR}>
-      <Routers />
+      <BrowserRouter>
+        <Routers />
+      </BrowserRouter>
     </ConfigProvider>
   );
 }

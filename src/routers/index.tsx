@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LayoutBase from "components/LayoutBase";
 
 import Home from "pages/Home";
@@ -8,16 +8,14 @@ import ClientesView from "pages/Clientes/ClientesView";
 
 export default function Routers() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LayoutBase />}>
-          <Route index element={<Home />} />
-          <Route path="clientes" element={<Clientes />} />
-          <Route path="clientes/:id" element={<ClientesView />} />
-          <Route path="error/404" element={<Error404 />} />
-        </Route>
-        <Route path="*" element={<Error404 showGoHome />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LayoutBase />}>
+        <Route index element={<Home />} />
+        <Route path="clientes" element={<Clientes />} />
+        <Route path="clientes/:id" element={<ClientesView />} />
+        <Route path="error/404" element={<Error404 />} />
+      </Route>
+      <Route path="*" element={<Error404 showGoHome />} />
+    </Routes>
   );
 }

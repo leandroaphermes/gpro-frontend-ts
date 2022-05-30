@@ -1,5 +1,6 @@
+import { useEffect, useMemo, useState } from "react";
 import { Grid, Menu, Tag } from "antd";
-import { Link, matchPath, resolvePath, useLocation } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
   LogoutOutlined,
@@ -8,18 +9,7 @@ import {
 } from "@ant-design/icons";
 import _ from "lodash";
 
-import {
-  BrandSubTitle,
-  BrandTitle,
-  ContainerUsuario,
-  ContainerUsuarioText,
-  ContainerVersao,
-  LayoutSider,
-  LinkSuporte,
-  TextVersao,
-  WrapperBrand,
-} from "./styles";
-import { useEffect, useMemo, useState } from "react";
+import * as S from "./styles";
 
 export type AsideProps = {
   collapsed: boolean;
@@ -91,7 +81,7 @@ export default function Aside({
           return { href: item.href, status: !!match };
         })
         .find((row) => row.status),
-    [location.pathname, routerList]
+    [location.pathname]
   );
 
   useEffect(() => {
@@ -99,7 +89,7 @@ export default function Aside({
   }, [defaultSelected]);
 
   return (
-    <LayoutSider
+    <S.LayoutSider
       collapsible
       breakpoint="xl"
       collapsed={collapsed}
@@ -108,36 +98,38 @@ export default function Aside({
       collapsedWidth={responsive.md ? 80 : 0}
       width={widthMenu}
     >
-      <WrapperBrand>
-        <BrandTitle level={4}>{process.env.REACT_APP_NAME}</BrandTitle>
+      <S.WrapperBrand>
+        <S.BrandTitle level={4}>{process.env.REACT_APP_NAME}</S.BrandTitle>
         {!collapsed && (
-          <BrandSubTitle>{process.env.REACT_APP_SUBNAME}</BrandSubTitle>
+          <S.BrandSubTitle>{process.env.REACT_APP_SUBNAME}</S.BrandSubTitle>
         )}
-        <ContainerVersao>
-          <TextVersao>{process.env.REACT_APP_VERSION}</TextVersao>{" "}
-          <TextVersao>{_.upperFirst(empresa?.versao_contratado)}</TextVersao>
-        </ContainerVersao>
+        <S.ContainerVersao>
+          <S.TextVersao>{process.env.REACT_APP_VERSION}</S.TextVersao>{" "}
+          <S.TextVersao>
+            {_.upperFirst(empresa?.versao_contratado)}
+          </S.TextVersao>
+        </S.ContainerVersao>
         {!collapsed && (
           <div>
-            <LinkSuporte
+            <S.LinkSuporte
               href="https://app.pipefy.com/public/form/5UPXYXx3"
               target="_blank"
               rel="noreferrer"
             >
               Ajuda e Suporte
-            </LinkSuporte>
+            </S.LinkSuporte>
           </div>
         )}
-        <ContainerUsuario>
-          <ContainerUsuarioText>
+        <S.ContainerUsuario>
+          <S.ContainerUsuarioText>
             {String(usuario?.nome || "").split(" ")?.[0] || ""} (
             {String(empresa.nome).trim()})
-          </ContainerUsuarioText>
-        </ContainerUsuario>
+          </S.ContainerUsuarioText>
+        </S.ContainerUsuario>
         {empresa?.status_contratado === "vencido" && !collapsed && (
           <Tag color="warning">Existem mensalidade(s) vencidas!</Tag>
         )}
-      </WrapperBrand>
+      </S.WrapperBrand>
 
       <Menu
         theme="dark"
@@ -149,6 +141,6 @@ export default function Aside({
           label: <Link to={item.href}>{item.label}</Link>,
         }))}
       />
-    </LayoutSider>
+    </S.LayoutSider>
   );
 }

@@ -117,7 +117,6 @@ export default function PageHeader({
             title={saveText || saveMode === "save" ? "Salvar" : "Adicionar"}
           >
             <Button
-              shape="round"
               size="middle"
               type="primary"
               icon={saveMode === "save" ? <SaveOutlined /> : <PlusOutlined />}
@@ -129,11 +128,10 @@ export default function PageHeader({
         {acoesMenu && (
           <Dropdown arrow overlay={acoesMenu} trigger={["click"]}>
             <Button
-              shape="round"
               size="middle"
               type="ghost"
               icon={<MenuOutlined />}
-              aria-label="Mais Ações"
+              title="Mais Ações"
             >
               {acoesMenuText}
             </Button>

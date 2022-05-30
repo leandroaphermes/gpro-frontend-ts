@@ -28,7 +28,7 @@ function useRequest<T>(
     }
   }, [options.mountLoad, load]);
 
-  return [loading, resultados, load];
+  return [resultados, loading, load];
 }
 
 export default useRequest;

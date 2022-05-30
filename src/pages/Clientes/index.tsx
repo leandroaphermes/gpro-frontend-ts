@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Card,
   Col,
@@ -7,18 +8,29 @@ import {
   Menu,
   Table,
   TableColumnsType,
+  message,
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import BaseTemplate from "components/TemplatePage";
-import { mockData } from "./mock";
-import { useNavigate } from "react-router-dom";
+import useRequest from "hooks/useRequest";
+import ClientesDao from "services/DAO/clientes";
+
+export type RecordCliente = {
+  id: number;
+  nome: string;
+  nascimento_data?: string;
+  cpf?: number;
+  rg: string;
+  telefones: [{ num: number; obs: string }] | null;
+};
 
 export default function Clientes() {
   const initialFilterAvancado = useMemo(() => ({}), []);
 
   const navigate = useNavigate();
+  const [resultados, loading] = useRequest(ClientesDao.getBuscar);
 
   const fieldsForm = (form: FormInstance) => {
     return (
@@ -49,22 +61,22 @@ export default function Clientes() {
     />
   );
 
-  const colunas: TableColumnsType<typeof mockData[0]> = [
+  const colunas: TableColumnsType<RecordCliente> = [
     {
       title: "Nome",
-      dataIndex: "name",
+      dataIndex: "nome",
     },
     {
-      title: "Gender",
-      dataIndex: "gender",
+      title: "Data Nascimento",
+      dataIndex: "nascimento_data",
     },
     {
-      title: "Mail",
-      dataIndex: "email",
+      title: "cpf",
+      dataIndex: "cpf",
     },
     {
-      title: "Age",
-      dataIndex: "age",
+      title: "RG",
+      dataIndex: "rg",
       align: "right",
     },
   ];
@@ -77,7 +89,7 @@ export default function Clientes() {
         showFilter: true,
         fieldsFilterAvancado: fieldsForm,
         initialFilterAvancado,
-        onSave: console.log,
+        onSave: () => message.info("Modal criar cliente"),
         showSave: true,
         saveMode: "add",
         acoesMenu: menu,
@@ -85,7 +97,7 @@ export default function Clientes() {
     >
       <Card>
         <Table
-          dataSource={mockData}
+          dataSource={resultados}
           columns={colunas}
           rowKey="_id"
           onRow={(rowData) => ({

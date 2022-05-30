@@ -22,3 +22,28 @@ html {
 .ant-col.ant-form-item-label {
   padding-bottom: 0px;
 }
+
+
+/* Scrollbar styling */
+
+/* Works on Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.164) auto;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+	width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color:rgba(0, 0, 0, 0.164);
+  border-radius: 3px;
+}
+
+/* End scrollbar styling*/

@@ -1,5 +1,5 @@
 import { Layout } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import LayoutMenuAside from "components/LayoutMenuAside";

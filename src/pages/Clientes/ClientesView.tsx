@@ -13,7 +13,6 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 
 import BaseTemplate from "components/TemplatePage";
 
-import { mockData } from "./mock";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 
@@ -22,8 +21,6 @@ export default function ClientesView() {
   const [form] = Form.useForm();
 
   const [loadingButton, setLoadingButton] = useState(false);
-
-  const data = mockData.find((user) => user._id === id);
 
   console.log(id);
 
@@ -38,8 +35,6 @@ export default function ClientesView() {
       ]}
     />
   );
-
-  console.log(data);
 
   function handleSubmit(values: any) {
     setLoadingButton(true);
@@ -66,7 +61,7 @@ export default function ClientesView() {
           <Descriptions.Item label="Telefones">{data?.phone}</Descriptions.Item>
           <Descriptions.Item label="Data Nasci.">{data?.age}</Descriptions.Item>
           <Descriptions.Item label="Criado em">
-            {new Date(data?.registered || "").toLocaleDateString()}
+            {new Date(data?.registered || "").toLocaleString()}
           </Descriptions.Item>
           <Descriptions.Item label="Email">{data?.email}</Descriptions.Item>
           <Descriptions.Item label="Endereço">
