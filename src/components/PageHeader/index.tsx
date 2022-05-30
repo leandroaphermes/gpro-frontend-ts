@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Dropdown, Grid, Space, Typography } from "antd";
+import { Button, Dropdown, Grid, Space, Tooltip, Typography } from "antd";
 import {
   ArrowLeftOutlined,
   FilterOutlined,
@@ -21,8 +21,8 @@ export type PageHeaderProps = {
   subTitle?: React.ReactNode;
   acoesMenu?: JSX.Element;
   acoesMenuText?: React.ReactNode;
-  loading?: boolean;
   onSave?: () => void;
+  saveLoading?: boolean;
   saveText?: string;
   saveMode?: "save" | "add";
   showSearch?: boolean;
@@ -45,7 +45,7 @@ export default function PageHeader({
   showSave,
   showBackHistory = true,
   showFilter = true,
-  loading,
+  saveLoading,
   fieldsFilterAvancado,
   initialFilterAvancado,
 }: PageHeaderProps) {
@@ -85,7 +85,7 @@ export default function PageHeader({
           />
         )}
         <Space align="baseline">
-          <S.Title level={3}>{title}</S.Title>
+          <S.Title level={4}>{title}</S.Title>
           <Typography.Text type="secondary">{subTitle}</Typography.Text>
         </Space>
       </Space>
@@ -95,7 +95,6 @@ export default function PageHeader({
             size="middle"
             enterButton
             placeholder="Buscar"
-            loading={loading}
             onSearch={handleSearch}
             ref={refSearch}
             style={{ width: !responsive.md ? "150px" : "300px" }}
@@ -114,19 +113,23 @@ export default function PageHeader({
       )}
       <Space>
         {showSave && (
-          <Button
-            size="middle"
-            type="primary"
-            icon={saveMode === "save" ? <SaveOutlined /> : <PlusOutlined />}
-            onClick={onSave}
-            loading={loading}
+          <Tooltip
+            title={saveText || saveMode === "save" ? "Salvar" : "Adicionar"}
           >
-            {saveText || saveMode === "save" ? "Salvar" : "Adicionar"}
-          </Button>
+            <Button
+              shape="round"
+              size="middle"
+              type="primary"
+              icon={saveMode === "save" ? <SaveOutlined /> : <PlusOutlined />}
+              onClick={onSave}
+              loading={saveLoading}
+            />
+          </Tooltip>
         )}
         {acoesMenu && (
           <Dropdown arrow overlay={acoesMenu} trigger={["click"]}>
             <Button
+              shape="round"
               size="middle"
               type="ghost"
               icon={<MenuOutlined />}
