@@ -1,19 +1,32 @@
 import { useState } from "react";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  AuditOutlined,
+  ContainerOutlined,
+  DeleteOutlined,
+  FileImageOutlined,
+  FileOutlined,
+  InfoCircleOutlined,
+  PhoneOutlined,
+  TagOutlined,
+  UserOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import {
   Card,
-  Descriptions,
   Menu,
   Form,
   message,
-  Input,
   Row,
   Col,
-  DatePicker,
+  Typography,
+  Space,
+  Tabs,
 } from "antd";
 
 import BaseTemplate from "components/TemplatePage";
+import Formulario from "./Formulario";
 
 const data = {
   name: "loremss",
@@ -32,6 +45,85 @@ export default function ClientesView() {
 
   console.log(id);
 
+  const tabsList = [
+    {
+      key: "dados-cadastrais",
+      tab: {
+        icon: <UserOutlined />,
+        label: "Dados Cadastro",
+      },
+      children: <Formulario form={form} />,
+      forceRender: true,
+      visible: true,
+    },
+    {
+      key: "ligacoes",
+      tab: {
+        icon: <PhoneOutlined />,
+        label: "Ligações",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+    {
+      key: "oportunidades",
+      tab: {
+        icon: <AuditOutlined />,
+        label: "Oportunidades",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+    {
+      key: "processos",
+      tab: {
+        icon: <ContainerOutlined />,
+        label: "Processos",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+    {
+      key: "anexos",
+      tab: {
+        icon: <FileOutlined />,
+        label: "Anexos",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+    {
+      key: "galeria",
+      tab: {
+        icon: <FileImageOutlined />,
+        label: "Galeria",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+    {
+      key: "questionarios",
+      tab: {
+        icon: <AppstoreAddOutlined />,
+        label: "Questionários",
+      },
+      children:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque voluptatum, dolor voluptatibus numquam saepe quae veritatis in ratione id omnis provident vitae eius! Dolores et accusamus ab, sint ratione temporibus?",
+      forceRender: false,
+      visible: true,
+    },
+  ];
+
   const menu = (
     <Menu
       items={[
@@ -39,6 +131,20 @@ export default function ClientesView() {
           key: "info",
           label: "Informações",
           icon: <InfoCircleOutlined />,
+        },
+        {
+          key: "impossibilitar",
+          label: "Impossiblitar Cliente",
+          icon: <WarningOutlined />,
+        },
+        {
+          type: "divider",
+        },
+        {
+          key: "excluir",
+          label: "Excluir",
+          danger: true,
+          icon: <DeleteOutlined />,
         },
       ]}
     />
@@ -65,49 +171,39 @@ export default function ClientesView() {
       }}
     >
       <Card>
-        <Descriptions size="small" column={3}>
-          <Descriptions.Item label="Telefones">{data?.phone}</Descriptions.Item>
-          <Descriptions.Item label="Data Nasci.">{data?.age}</Descriptions.Item>
-          <Descriptions.Item label="Criado em">
-            {new Date(data?.registered || "").toLocaleString()}
-          </Descriptions.Item>
-          <Descriptions.Item label="Email">{data?.email}</Descriptions.Item>
-          <Descriptions.Item label="Endereço">
-            {data?.address}
-          </Descriptions.Item>
-        </Descriptions>
+        <Row justify="space-between">
+          <Col>
+            <Space>
+              <Typography.Text type="secondary">
+                Cliente ID: 222222
+              </Typography.Text>
+              <Typography.Text copyable>Nome: fas fasf asfa</Typography.Text>
+            </Space>
+          </Col>
+          <Col>
+            <TagOutlined />
+          </Col>
+        </Row>
       </Card>
       <Card>
-        <Form layout="vertical" form={form} onFinish={handleSubmit}>
-          <Row gutter={[5, 5]}>
-            <Col xs={24} lg={8}>
-              <Form.Item
-                name="name"
-                label="Nome"
-                rules={[{ required: true, min: 2, max: 100 }]}
+        <Tabs>
+          {tabsList
+            .filter((tabItem) => tabItem.visible)
+            .map((tabItem) => (
+              <Tabs.TabPane
+                key={tabItem.key}
+                tab={
+                  <span>
+                    {tabItem.tab.icon}
+                    {tabItem.tab.label}
+                  </span>
+                }
+                forceRender={tabItem.forceRender}
               >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col xs={24} lg={8}>
-              <Form.Item name="nascimento_data" label="Data Nascimento">
-                <DatePicker allowClear format="DD/MM/YYYY" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
-      <Card>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas officiis
-        repellendus architecto dignissimos explicabo animi sint perferendis
-        soluta vitae ratione iusto officia beatae iure quasi incidunt fugit
-        blanditiis, id exercitationem?
-      </Card>
-      <Card>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas officiis
-        repellendus architecto dignissimos explicabo animi sint perferendis
-        soluta vitae ratione iusto officia beatae iure quasi incidunt fugit
-        blanditiis, id exercitationem?
+                {tabItem.children}
+              </Tabs.TabPane>
+            ))}
+        </Tabs>
       </Card>
     </BaseTemplate>
   );
