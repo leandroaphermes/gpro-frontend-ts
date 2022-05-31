@@ -1,10 +1,12 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { NavigateOptions } from "react-router-dom";
 import QueryString from "query-string";
 
-export default function useQuerieString<T>() {
-  const [searchParams, setSearchParams] = useSearchParams();
+export default function useQuerieString<T>(initValues?: T) {
+  const [searchParams, setSearchParams] = useSearchParams(
+    new URLSearchParams(QueryString.stringify(initValues || {}))
+  );
 
   const setURL = useCallback(
     (values: object, options?: NavigateOptions) => {
@@ -16,8 +18,10 @@ export default function useQuerieString<T>() {
     [setSearchParams]
   );
 
-  return [
-    QueryString.parse(searchParams.toString()) as unknown as T,
-    setURL,
-  ] as const;
+  const memoQueries = useMemo(
+    () => QueryString.parse(searchParams.toString()) as unknown as T,
+    [searchParams]
+  );
+
+  return [memoQueries, setURL] as const;
 }

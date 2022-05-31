@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Drawer, Space, Form, Row, FormInstance } from "antd";
 
-export type DrawerFilteRenderProp = (form: FormInstance) => JSX.Element;
+export type DrawerFilteRenderProp = (
+  form: FormInstance,
+  focusFirstField: React.RefObject<HTMLInputElement>
+) => JSX.Element;
 
 export type DrawerFilterProps<T> = {
   visible: boolean;
@@ -20,17 +23,23 @@ export default function DrawerFilter<T>({
   onOk,
   initialValues,
 }: DrawerFilterProps<T>) {
+  const focusFirstField = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  function handleOk() {
-    form.validateFields().then((values) => {
-      setLoading(true);
-      onOk(values).finally(() => {
-        setLoading(false);
-      });
+  function handleSubmit(values: T) {
+    setLoading(true);
+    onOk(values).finally(() => {
+      setLoading(false);
     });
   }
+
+  useEffect(() => {
+    if (visible) {
+      console.log(focusFirstField);
+      focusFirstField.current?.focus();
+    }
+  }, [visible, focusFirstField]);
 
   return (
     <Drawer
@@ -42,14 +51,23 @@ export default function DrawerFilter<T>({
       extra={
         <Space>
           <Button onClick={onClose}>Cancelar</Button>
-          <Button type="primary" onClick={handleOk} loading={loading}>
+          <Button
+            type="primary"
+            onClick={() => form.submit()}
+            loading={loading}
+          >
             Pesquisar
           </Button>
         </Space>
       }
     >
-      <Form layout="vertical" form={form} initialValues={initialValues}>
-        <Row gutter={[8, 8]}>{children && children(form)}</Row>
+      <Form
+        layout="vertical"
+        form={form}
+        initialValues={initialValues}
+        onFinish={handleSubmit}
+      >
+        <Row gutter={[8, 8]}>{children && children(form, focusFirstField)}</Row>
       </Form>
     </Drawer>
   );

@@ -1,32 +1,58 @@
 import { useCallback, useEffect, useState } from "react";
-import { AxiosPromise } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { message } from "antd";
 
 export type RequestOptionsProp = {
-  mountLoad: boolean;
+  ignoreInitLoaded: boolean;
 };
 
-export type RequestReturn<T> = [boolean, T[], () => Promise<void>];
+export type RequestReturn<T> = [
+  T | null,
+  boolean,
+  (params?: any) => Promise<void>
+];
+export type ResponseErrorDataApi = {
+  message: string;
+};
 
 function useRequest<T>(
-  serviceDao: AxiosPromise,
-  options: RequestOptionsProp
+  serviceDao: (params?: any) => Promise<AxiosResponse>,
+  options?: RequestOptionsProp
 ): RequestReturn<T> {
   const [loading, setLoading] = useState(false);
-  const [resultados, setResultados] = useState([]);
+  const [resultados, setResultados] = useState(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    serviceDao.then((response) => {
-      setResultados(response.data);
-      setLoading(false);
-    });
-  }, [serviceDao]);
+  const load = useCallback(
+    async (params?: any) => {
+      setLoading(true);
+      serviceDao(params)
+        .then((response) => {
+          setResultados(response.data);
+          setLoading(false);
+        })
+        .catch((errInstancie: Error | AxiosError<ResponseErrorDataApi>) => {
+          if (axios.isAxiosError(errInstancie)) {
+            // Access to config, request, and response
+            if (errInstancie.response?.status === 409) {
+              message.error(errInstancie.response?.data?.message);
+            } else {
+              message.error("Não foi possivel fazer esta ação");
+            }
+          } else {
+            // Just a stock error
+            message.error("Erro interno. Notifique o suporte do GPro");
+          }
+          setLoading(false);
+        });
+    },
+    [serviceDao]
+  );
 
   useEffect(() => {
-    if (options.mountLoad) {
+    if (!options?.ignoreInitLoaded) {
       load();
     }
-  }, [options.mountLoad, load]);
+  }, [options?.ignoreInitLoaded, load]);
 
   return [resultados, loading, load];
 }

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
 import {
   Card,
   Descriptions,
@@ -9,12 +12,17 @@ import {
   Col,
   DatePicker,
 } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
 
 import BaseTemplate from "components/TemplatePage";
 
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+const data = {
+  name: "loremss",
+  phone: "231412-512512",
+  age: 25,
+  email: "afasfasfasfas",
+  address: "agasgahwoor wroakp kasa slça",
+  registered: new Date().toISOString(),
+};
 
 export default function ClientesView() {
   const { id } = useParams();
