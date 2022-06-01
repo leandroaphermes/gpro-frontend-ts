@@ -14,7 +14,7 @@ import {
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
-import type { ClienteFiltroListaQueryType } from "types/cliente";
+import type { ClienteFiltroListaQueryType, ClienteType } from "types/cliente";
 import ClientesDao from "services/DAO/clientes";
 
 import useRequest from "hooks/useRequest";
@@ -23,15 +23,6 @@ import useQuerieString from "hooks/useQuerieString";
 import BaseTemplate from "components/TemplatePage";
 import CardLoading from "components/CardLoading";
 
-export type RecordCliente = {
-  id: number;
-  nome: string;
-  nascimento_data?: string;
-  cpf?: number;
-  rg: string;
-  telefones: [{ num: number; obs: string }] | null;
-};
-
 export default function Clientes() {
   const [queries] = useQuerieString<ClienteFiltroListaQueryType>({
     coluna: "todos",
@@ -39,7 +30,7 @@ export default function Clientes() {
   });
 
   const navigate = useNavigate();
-  const [resultados, loading, load] = useRequest<RecordCliente[]>(
+  const [resultados, loading, load] = useRequest<ClienteType[]>(
     ClientesDao.getBuscar,
     { ignoreInitLoaded: true }
   );
@@ -87,7 +78,7 @@ export default function Clientes() {
     );
   };
 
-  const colunas: TableColumnsType<RecordCliente> = [
+  const colunas: TableColumnsType<ClienteType> = [
     {
       title: "Nome",
       dataIndex: "nome",
@@ -107,19 +98,19 @@ export default function Clientes() {
     },
   ];
 
-  console.log(queries);
-
   useEffect(() => {
-    load({
-      ...queries,
-      created_at: queries?.created_at?.[0]
-        ? [
-            moment(queries.created_at[0]).format(moment.HTML5_FMT.DATE),
-            moment(queries.created_at[1]).format(moment.HTML5_FMT.DATE),
-          ]
-        : null,
-      incluir_impossibilitados: queries.incluir_impossibilitados === "true",
-    });
+    if (queries.pesquisa) {
+      load({
+        ...queries,
+        created_at: queries?.created_at?.[0]
+          ? [
+              moment(queries.created_at[0]).format(moment.HTML5_FMT.DATE),
+              moment(queries.created_at[1]).format(moment.HTML5_FMT.DATE),
+            ]
+          : null,
+        incluir_impossibilitados: queries.incluir_impossibilitados === "true",
+      });
+    }
   }, [load, queries]);
 
   return (

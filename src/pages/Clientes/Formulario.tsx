@@ -2,11 +2,12 @@ import { Col, Form, Input, Row, FormInstance, DatePicker, Select } from "antd";
 
 export type FormularioProps = {
   form: FormInstance;
+  onChangeFinish: (values: any) => void;
 };
 
-export default function Formulario({ form }: FormularioProps) {
+export default function Formulario({ form, onChangeFinish }: FormularioProps) {
   return (
-    <Form form={form} layout="vertical">
+    <Form form={form} layout="vertical" onFinish={onChangeFinish}>
       <Row gutter={[5, 5]}>
         <Col xs={24} lg={12}>
           <Form.Item

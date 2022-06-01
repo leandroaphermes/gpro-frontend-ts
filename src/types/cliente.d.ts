@@ -17,9 +17,9 @@ export type ClienteTipoRegistro = "lead" | "cliente";
 export type ClienteType = {
   id: number;
   nome: string;
-  email?: string;
+  email: string | null;
   cpf: number | null;
-  rg?: string;
+  rg: string | null;
   sexo: string;
   foto: boolean;
   nascimento_data: string | null;
@@ -41,7 +41,6 @@ export type ClienteType = {
 };
 
 export type ClienteRequestType = Omit<ClienteType, "marcadores" | "id"> & {
-  marcadores: MarcadorType["id"][];
   id?: number;
 };
 

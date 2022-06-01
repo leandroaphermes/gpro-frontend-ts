@@ -8,29 +8,31 @@ import {
   ClienteFiltroListaQueryType,
   ClienteFormType,
   ClienteRequestType,
+  ClienteType,
   ClienteUniqKey,
 } from "types/cliente";
 import { AxiosRequestHeaders } from "axios";
+import { MarcadorType } from "types/marcador";
 
 const prefix = "clientes";
 
 class ClientesDao {
-  static getBuscar(filtros: ClienteFiltroListaQueryType) {
-    return api.get(prefix, {
+  static getBuscar<T>(filtros: ClienteFiltroListaQueryType) {
+    return api.get<T>(prefix, {
       params: filtros,
       validateStatus: (s) => s === 200,
     });
   }
 
-  static getBasico(filtros: ClienteFiltroListaQueryType) {
-    return api.get(`${prefix}/basico`, {
+  static getBasico<T>(filtros: ClienteFiltroListaQueryType) {
+    return api.get<T>(`${prefix}/basico`, {
       params: filtros,
       validateStatus: (s) => s === 200,
     });
   }
 
-  static getPorID(id: ClienteUniqKey) {
-    return api.get(`${prefix}/${id}`, {
+  static getPorID<T>(id: ClienteUniqKey) {
+    return api.get<T>(`${prefix}/${id}`, {
       validateStatus: (s) => s === 200,
     });
   }
@@ -43,8 +45,8 @@ class ClientesDao {
     return this.getBasico({ pesquisa: telefone, coluna: "telefone" });
   }
 
-  static salvar(values: ClienteFormType) {
-    const novosValores: ClienteRequestType = {
+  static salvar(values: Partial<ClienteFormType>) {
+    const novosValores: Partial<ClienteRequestType> = {
       ...values,
       nascimento_data: values.nascimento_data
         ? values.nascimento_data.format(moment.HTML5_FMT.DATE)
@@ -52,12 +54,16 @@ class ClientesDao {
     };
 
     if (novosValores?.id) {
-      return api.put(`${prefix}/${novosValores.id}`, novosValores, {
-        validateStatus: (s) => s === 200,
-      });
+      return api.put<ClienteType>(
+        `${prefix}/${novosValores.id}`,
+        novosValores,
+        {
+          validateStatus: (s) => s === 200,
+        }
+      );
     }
 
-    return api.post(prefix, values, {
+    return api.post<ClienteType>(prefix, values, {
       validateStatus: (s) => s === 201,
     });
   }
@@ -74,10 +80,7 @@ class ClientesDao {
     });
   }
 
-  static atualizarMarcadores(
-    id: ClienteUniqKey,
-    values: ClienteRequestType["marcadores"]
-  ) {
+  static atualizarMarcadores(id: ClienteUniqKey, values: MarcadorType["id"][]) {
     return api.put(`${prefix}/${id}/marcadores`, values, {
       validateStatus: (s) => s === 200,
     });

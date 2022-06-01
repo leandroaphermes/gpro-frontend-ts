@@ -91,7 +91,7 @@ export default function Aside({
   return (
     <S.LayoutSider
       collapsible
-      breakpoint="xl"
+      breakpoint="xxl"
       collapsed={collapsed}
       onCollapse={onToogleCollapsed}
       onBreakpoint={onToogleCollapsed}

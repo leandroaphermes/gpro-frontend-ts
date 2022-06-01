@@ -62,14 +62,21 @@ export default function PageHeader({
     setSearchParams({ ...searchParams, ...value });
   }
 
-  const handleSearch: onSearchProp = function (value, event) {
-    /* console.log(value, event); */
+  const handleSearch: onSearchProp = function (value) {
     setSearchParams({ ...searchParams, pesquisa: value });
   };
 
+  function handleResetFiltroAvancado() {
+    setSearchParams({ pesquisa: searchParams.pesquisa || "" });
+  }
+
   useEffect(() => {
-    refSearch.current?.focus();
-  }, []);
+    if (showSearch) refSearch.current?.focus();
+  }, [showSearch]);
+
+  useEffect(() => {
+    document.title = `${title}${subTitle ? ` - ${subTitle}` : ""} - GPro`;
+  }, [title, subTitle]);
 
   return (
     <S.Wrapper>
@@ -140,6 +147,7 @@ export default function PageHeader({
         visible={controleModalFiltroAvancado}
         onClose={() => setControleModalFiltroAvancado(false)}
         onOk={handleSearchAvancado}
+        onReset={handleResetFiltroAvancado}
         initialValues={initialFilterAvancado}
         children={fieldsFilterAvancado}
       />

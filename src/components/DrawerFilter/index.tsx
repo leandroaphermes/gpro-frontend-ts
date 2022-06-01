@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Drawer, Space, Form, Row, FormInstance } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
 
 export type DrawerFilteRenderProp = (
   form: FormInstance,
@@ -11,6 +12,7 @@ export type DrawerFilterProps<T> = {
   children?: DrawerFilteRenderProp;
   title?: React.ReactNode;
   onClose: () => void;
+  onReset: () => void;
   onOk: (values: any) => Promise<void>;
   initialValues?: T;
 };
@@ -21,6 +23,7 @@ export default function DrawerFilter<T>({
   title = "Filtros Avançado",
   onClose,
   onOk,
+  onReset,
   initialValues,
 }: DrawerFilterProps<T>) {
   const focusFirstField = useRef<HTMLInputElement>(null);
@@ -36,8 +39,7 @@ export default function DrawerFilter<T>({
 
   useEffect(() => {
     if (visible) {
-      console.log(focusFirstField);
-      focusFirstField.current?.focus();
+      setTimeout(() => focusFirstField.current?.focus(), 500);
     }
   }, [visible, focusFirstField]);
 
@@ -50,6 +52,14 @@ export default function DrawerFilter<T>({
       onClose={onClose}
       extra={
         <Space>
+          <Button
+            icon={<FilterOutlined />}
+            title="Limpar Filtros"
+            onClick={() => {
+              onReset();
+              setTimeout(() => form.resetFields(), 500);
+            }}
+          />
           <Button onClick={onClose}>Cancelar</Button>
           <Button
             type="primary"

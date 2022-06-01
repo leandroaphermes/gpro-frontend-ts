@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppstoreAddOutlined,
   AuditOutlined,
@@ -8,42 +8,56 @@ import {
   FileOutlined,
   InfoCircleOutlined,
   PhoneOutlined,
-  TagOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
-import {
-  Card,
-  Menu,
-  Form,
-  message,
-  Row,
-  Col,
-  Typography,
-  Space,
-  Tabs,
-} from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import { Card, Menu, Form, Tabs } from "antd";
+import type { ClienteFormType, ClienteType } from "types/cliente";
+
+import useCliente, { ClienteProvider } from "hooks/useCliente";
 
 import BaseTemplate from "components/TemplatePage";
-import Formulario from "./Formulario";
+import ClienteBarInfoBasico from "components/ClienteBarInfoBasico";
+import CardLoading from "components/CardLoading";
 
-const data = {
-  name: "loremss",
-  phone: "231412-512512",
-  age: 25,
-  email: "afasfasfasfas",
-  address: "agasgahwoor wroakp kasa slça",
-  registered: new Date().toISOString(),
-};
+import Formulario from "./Formulario";
+import moment from "moment";
 
 export default function ClientesView() {
   const { id } = useParams();
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
+  const { cliente, load, loading, salvar } = useCliente();
   const [loadingButton, setLoadingButton] = useState(false);
 
-  console.log(id);
+  function handleSubmit(values: ClienteFormType) {
+    setLoadingButton(true);
+    salvar(values).finally(() => {
+      setLoadingButton(false);
+    });
+  }
+
+  useEffect(() => {
+    if (id) {
+      load(parseInt(id))
+        .then((data: ClienteType) => {
+          form.setFieldsValue({
+            ...data,
+            nascimento_data: data.nascimento_data
+              ? moment(data.nascimento_data)
+              : null,
+          });
+        })
+        .catch(() => navigate("/erros/404"));
+    }
+  }, [load, id, navigate, form]);
+
+  if (loading) return <CardLoading />;
+  if (cliente === null) {
+    return null;
+  }
 
   const tabsList = [
     {
@@ -52,7 +66,7 @@ export default function ClientesView() {
         icon: <UserOutlined />,
         label: "Dados Cadastro",
       },
-      children: <Formulario form={form} />,
+      children: <Formulario form={form} onChangeFinish={handleSubmit} />,
       forceRender: true,
       visible: true,
     },
@@ -150,61 +164,43 @@ export default function ClientesView() {
     />
   );
 
-  function handleSubmit(values: any) {
-    setLoadingButton(true);
-    setTimeout(() => {
-      setLoadingButton(false);
-      message.success("Salvo com sucesso");
-    }, 5000);
-  }
-
+  console.log(id);
   return (
-    <BaseTemplate
-      container="central"
-      headerProps={{
-        title: `Cliente: ${data?.name}`,
-        onSave: () => form.submit(),
-        saveLoading: loadingButton,
-        showSave: true,
-        showSearch: false,
-        acoesMenu: menu,
-      }}
-    >
-      <Card>
-        <Row justify="space-between">
-          <Col>
-            <Space>
-              <Typography.Text type="secondary">
-                Cliente ID: 222222
-              </Typography.Text>
-              <Typography.Text copyable>Nome: fas fasf asfa</Typography.Text>
-            </Space>
-          </Col>
-          <Col>
-            <TagOutlined />
-          </Col>
-        </Row>
-      </Card>
-      <Card>
-        <Tabs>
-          {tabsList
-            .filter((tabItem) => tabItem.visible)
-            .map((tabItem) => (
-              <Tabs.TabPane
-                key={tabItem.key}
-                tab={
-                  <span>
-                    {tabItem.tab.icon}
-                    {tabItem.tab.label}
-                  </span>
-                }
-                forceRender={tabItem.forceRender}
-              >
-                {tabItem.children}
-              </Tabs.TabPane>
-            ))}
-        </Tabs>
-      </Card>
-    </BaseTemplate>
+    <ClienteProvider>
+      <BaseTemplate
+        container="central"
+        headerProps={{
+          title: cliente.nome,
+          subTitle: "Cliente",
+          onSave: () => form.submit(),
+          saveLoading: loadingButton,
+          showSave: true,
+          showSearch: false,
+          acoesMenu: menu,
+        }}
+      >
+        <ClienteBarInfoBasico cliente={cliente} />
+        <Card>
+          <Tabs>
+            {tabsList
+              .filter((tabItem) => tabItem.visible)
+              .map((tabItem) => (
+                <Tabs.TabPane
+                  key={tabItem.key}
+                  tab={
+                    <span>
+                      {tabItem.tab.icon}
+                      {tabItem.tab.label}
+                    </span>
+                  }
+                  forceRender={tabItem.forceRender}
+                >
+                  {tabItem.children}
+                </Tabs.TabPane>
+              ))}
+          </Tabs>
+        </Card>
+      </BaseTemplate>
+    </ClienteProvider>
   );
 }
