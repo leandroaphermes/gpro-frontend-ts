@@ -4,8 +4,6 @@ import {
   Col,
   Form,
   FormInstance,
-  Table,
-  TableColumnsType,
   message,
   Select,
   DatePicker,
@@ -22,6 +20,9 @@ import useQuerieString from "hooks/useQuerieString";
 
 import BaseTemplate from "components/TemplatePage";
 import CardLoading from "components/CardLoading";
+import TabelaAvancada, {
+  TabelaAvancadaColumn,
+} from "components/TabelaAvancada";
 
 export default function Clientes() {
   const [queries] = useQuerieString<ClienteFiltroListaQueryType>({
@@ -78,23 +79,24 @@ export default function Clientes() {
     );
   };
 
-  const colunas: TableColumnsType<ClienteType> = [
+  const colunas: TabelaAvancadaColumn<ClienteType> = [
     {
-      title: "Nome",
-      dataIndex: "nome",
+      caption: "Nome",
+      dataField: "nome",
     },
     {
-      title: "Data Nascimento",
-      dataIndex: "nascimento_data",
+      caption: "Data Nascimento",
+      dataField: "nascimento_data",
+      dataType: "date",
     },
     {
-      title: "cpf",
-      dataIndex: "cpf",
+      caption: "cpf",
+      dataField: "cpf",
     },
     {
-      title: "RG",
-      dataIndex: "rg",
-      align: "right",
+      caption: "RG",
+      dataField: "rg",
+      alignment: "right",
     },
   ];
 
@@ -130,13 +132,11 @@ export default function Clientes() {
         <CardLoading />
       ) : (
         <Card>
-          <Table
+          <TabelaAvancada
             dataSource={resultados || []}
             columns={colunas}
             rowKey="id"
-            onRow={(rowData) => ({
-              onClick: (event) => navigate(`/clientes/${rowData.id}`),
-            })}
+            onRowClick={(data) => navigate(`/clientes/${data.id}`)}
           />
           {/*           <TabelaDevExtreme
             dataSource={resultados || []}
