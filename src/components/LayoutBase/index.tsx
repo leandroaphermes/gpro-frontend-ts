@@ -2,6 +2,7 @@ import { Layout } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
+import BarraAbas from "components/BarraAbas";
 import LayoutMenuAside from "components/LayoutMenuAside";
 
 const widthMenu = 240;
@@ -21,6 +22,7 @@ export default function LayoutBase() {
           height: "100vh",
         }}
       >
+        <BarraAbas />
         <Layout.Content>
           <Outlet />
         </Layout.Content>
